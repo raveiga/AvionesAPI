@@ -13,6 +13,11 @@ class Fabricante extends Model {
 	// Ocultamos los campos de timestamps en las consultas.
 	protected $hidden=['created_at','updated_at'];
 
-	
+	// Relación de Fabricante con Aviones:
+	public function aviones()
+	{
+		// La relación sería: 1 fabricante tiene muchos aviones.
+		return $this->hasMany('App\Avion');
+	}
 
 }
