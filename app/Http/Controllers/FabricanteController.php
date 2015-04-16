@@ -94,10 +94,12 @@ class FabricanteController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
+	/*
 	public function edit($id)
 	{
 		//
 	}
+	*/
 
 	/**
 	 * Update the specified resource in storage.
@@ -105,9 +107,83 @@ class FabricanteController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update($id,Request $request)
 	{
-		//
+		// Vamos a actualizar un fabricante.
+		// Comprobamos si el fabricante existe. En otro caso devolvemos error.
+		$fabricante=Fabricante::find($id);
+
+		// Si no existe mostramos error.
+		if (! $fabricante)
+		{
+			// Devolvemos error 404.
+			return response()->json(['errors'=>array(['code'=>404,'message'=>'No se encuentra un fabricante con ese código.'])],404);
+		}
+
+		// Almacenamos en variables para facilitar el uso, los campos recibidos.
+		$nombre=$request->input('nombre');
+		$direccion=$request->input('direccion');
+		$telefono=$request->input('telefono');
+
+		// Comprobamos si recibimos petición PATCH(parcial) o PUT (Total)
+		if ($request->method()=='PATCH')
+		{
+			$bandera=false;
+
+			// Actualización parcial de datos.
+			if ($nombre !=null && $nombre!='')
+			{
+				$fabricante->nombre=$nombre;
+				$bandera=true;
+			}
+
+			// Actualización parcial de datos.
+			if ($direccion !=null && $direccion!='')
+			{
+				$fabricante->direccion=$direccion;
+				$bandera=true;
+			}
+
+			// Actualización parcial de datos.
+			if ($telefono !=null && $telefono!='')
+			{
+				$fabricante->telefono=$telefono;
+				$bandera=true;
+			}
+
+			if ($bandera)
+			{
+				// Grabamos el fabricante.
+				$fabricante->save();
+
+				// Devolvemos un código 200.
+				return response()->json(['status'=>'ok','data'=>$fabricante],200);
+			}
+			else
+			{
+				// Devolvemos un código 304 Not Modified.
+				return response()->json(['errors'=>array(['code'=>304,'message'=>'No se ha modificado ningún dato del fabricante.'])],304);
+			}
+		}
+
+
+		// Método PUT actualizamos todos los campos.
+		// Comprobamos que recibimos todos.
+		if (!$nombre || !$direccion || !$telefono)
+		{
+			// Se devuelve código 422 Unprocessable Entity.
+			return response()->json(['errors'=>array(['code'=>422,'message'=>'Faltan valores para completar el procesamiento.'])],422);
+		}
+
+		// Actualizamos los 3 campos:
+		$fabricante->nombre=$nombre;
+		$fabricante->direccion=$direccion;
+		$fabricante->telefono=$telefono;
+
+		// Grabamos el fabricante
+		$fabricante->save();
+		return response()->json(['status'=>'ok','data'=>$fabricante],200);
+
 	}
 
 	/**
