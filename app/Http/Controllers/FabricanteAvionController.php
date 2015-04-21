@@ -105,35 +105,35 @@ class FabricanteAvionController extends Controller {
 			$bandera=false;
 
 			// Comprobamos campo a campo, si hemos recibido datos.
-			if ($modelo !=null && $modelo!='')
+			if ($modelo)
 			{
 				// Actualizamos este campo en el modelo Avion.
 				$avion->modelo=$modelo;
 				$bandera=true;
 			}
 
-			if ($longitud !=null && $longitud!='')
+			if ($longitud)
 			{
 				// Actualizamos este campo en el longitud Avion.
 				$avion->longitud=$longitud;
 				$bandera=true;
 			}
 
-			if ($capacidad !=null && $capacidad!='')
+			if ($capacidad)
 			{
 				// Actualizamos este campo en el capacidad Avion.
 				$avion->capacidad=$capacidad;
 				$bandera=true;
 			}
 
-			if ($velocidad !=null && $velocidad!='')
+			if ($velocidad)
 			{
 				// Actualizamos este campo en el velocidad Avion.
 				$avion->velocidad=$velocidad;
 				$bandera=true;
 			}
 
-			if ($alcance !=null && $alcance!='')
+			if ($alcance)
 			{
 				// Actualizamos este campo en el alcance Avion.
 				$avion->alcance=$alcance;
