@@ -74,9 +74,105 @@ class FabricanteAvionController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update($idFabricante, $idAvion,Request $request)
 	{
-		//
+		// Comprobamos si el fabricante existe.
+		$fabricante = Fabricante::find($idFabricante);
+
+		if (!$fabricante)
+		{
+			return response()->json(['errors'=>array(['code'=>404,'message'=>'No se encuentra un fabricante con ese código.'])],404);
+		}
+
+		// Comprobamos si el avión que buscamos pertenece a ese fabricante.
+		$avion = $fabricante->aviones()->find($idAvion);
+
+		if (!$avion)
+		{
+			return response()->json(['errors'=>array(['code'=>404,'message'=>'No se encuentra una avión  con ese código asociado al fabricante.'])],404);
+		}
+
+		// Listado de campos recibidos del formulario de actualización.
+		$modelo=$request->input('modelo');
+		$longitud=$request->input('longitud');
+		$capacidad=$request->input('capacidad');
+		$velocidad=$request->input('velocidad');
+		$alcance=$request->input('alcance');
+
+		// Comprobamos el método si es PATCH o PUT.
+		if ($request->method()==='PATCH')	// Actualización PARCIAL.
+		{
+			$bandera=false;
+
+			// Comprobamos campo a campo, si hemos recibido datos.
+			if ($modelo !=null && $modelo!='')
+			{
+				// Actualizamos este campo en el modelo Avion.
+				$avion->modelo=$modelo;
+				$bandera=true;
+			}
+
+			if ($longitud !=null && $longitud!='')
+			{
+				// Actualizamos este campo en el longitud Avion.
+				$avion->longitud=$longitud;
+				$bandera=true;
+			}
+
+			if ($capacidad !=null && $capacidad!='')
+			{
+				// Actualizamos este campo en el capacidad Avion.
+				$avion->capacidad=$capacidad;
+				$bandera=true;
+			}
+
+			if ($velocidad !=null && $velocidad!='')
+			{
+				// Actualizamos este campo en el velocidad Avion.
+				$avion->velocidad=$velocidad;
+				$bandera=true;
+			}
+
+			if ($alcance !=null && $alcance!='')
+			{
+				// Actualizamos este campo en el alcance Avion.
+				$avion->alcance=$alcance;
+				$bandera=true;
+			}
+
+			// Comprobamos la bandera
+			if ($bandera)
+			{
+				// Almacenamos los cambios del modelo en la tabla.
+				$avion->save();
+				return response()->json(['status'=>'ok','data'=>$avion],200);
+			}
+			else
+			{
+				//Código 304 Not modified.
+				return response()->json(['errors'=>array(['code'=>304,'message'=>'No se ha modificado ningún dato de avión.'])],304);
+			}
+		}
+
+		// Método PUT (actualización total)
+		// Chequeamos que recibimos todos los campos.
+		if (!$modelo || !$longitud || !$capacidad || !$velocidad || !$alcance)
+		{
+			// Código 422 Unprocessable Entity
+			return response()->json(['errors'=>array(['code'=>422,'message'=>'Faltan valores para completar el procesamiento.'])],422);
+		}
+
+		// Actualizamos el Modelo Avion
+		$avion->modelo=$modelo;
+		$avion->longitud=$longitud;
+		$avion->capacidad=$capacidad;
+		$avion->velocidad=$velocidad;
+		$avion->alcance=$alcance;
+
+		// Grabamos los datos de avion en la tabla
+		$avion->save();
+
+		return response()->json(['status'=>'ok','data'=>$avion],200);
 	}
 
 	/**

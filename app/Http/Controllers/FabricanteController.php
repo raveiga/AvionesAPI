@@ -210,13 +210,25 @@ class FabricanteController extends Controller {
 		// Este código no muestra texto en el body.
 		// Si quisiéramos ver el mensaje devolveríamos
 		// un código 200.
+		// Antes de borrarlo comprobamos si tiene aviones y si es así
+		// sacamos un mensaje de error.
+		// $aviones = $fabricante->aviones()->get();
+		$aviones = $fabricante->aviones;
 
+		if (sizeof($aviones) >0)
+		{
+			// Si quisiéramos borrar todos los aviones del fabricante sería:
+			// $fabricante->aviones->delete();
+
+			// Devolvemos un código 409 Conflict. 
+			return response()->json(['errors'=>array(['code'=>409,'message'=>'Este fabricante posee aviones y no puede ser eliminado.'])],409);
+		}
+
+		// Eliminamos el fabricante si no tiene aviones.
 		$fabricante->delete();
 
+		// Se devuelve código 204 No Content.
 		return response()->json(['code'=>204,'message'=>'Se ha eliminado correctamente el fabricante.'],204);
-
-
-
 	}
 
 }
