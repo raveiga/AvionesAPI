@@ -14,8 +14,8 @@ class DatabaseSeeder extends Seeder {
 	{
 		Model::unguard();
  		$this->call('FabricanteSeeder');
- 		$this->call('AvionSeeder'); 			
-		// $this->call('UserTableSeeder');
+ 		$this->call('AvionSeeder'); 
+ 		$this->call('UserSeeder');		
 	}
 
 }

@@ -13,7 +13,11 @@ use Response;
 use Illuminate\Support\Facades\Cache;
 
 class FabricanteAvionController extends Controller {
-
+	
+	public function __construct()
+	{
+		$this->middleware('auth.basic',['only'=>['store','update','destroy']]);
+	}
 	/**
 	 * Display a listing of the resource.
 	 *
