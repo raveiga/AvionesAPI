@@ -9,6 +9,9 @@ use App\Fabricante;
 use App\Avion;
 use Response;
 
+// Activamos caché.
+use Illuminate\Support\Facades\Cache;
+
 class FabricanteAvionController extends Controller {
 
 	/**
@@ -28,7 +31,15 @@ class FabricanteAvionController extends Controller {
 			return response()->json(['errors'=>array(['code'=>404,'message'=>'No se encuentra un fabricante con ese código.'])],404);
 		}
 
-		return response()->json(['status'=>'ok','data'=>$fabricante->aviones()->get()],200);
+		$listaAviones=Cache::remember('cacheaviones',1,function()
+		{
+			return $fabricante->aviones()->get();
+		});
+
+		// Respuesta con caché.
+		return response()->json(['status'=>'ok','data'=>$listaAviones],200);
+
+		// Respuesta sin caché.
 		// return response()->json(['status'=>'ok','data'=>$fabricante->aviones],200);
 	}
 
