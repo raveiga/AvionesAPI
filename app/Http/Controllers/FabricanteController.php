@@ -37,9 +37,7 @@ class FabricanteController extends Controller {
 		// El segundo parámetro son los minutos.
 		$fabricantes=Cache::remember('cachefabricantes',15/60,function()
 		{
-			return Fabricante::all();
-		});
-
+			return Fabricante::all(); 
 		// Para devolver un JSON con código de respuesta HTTP sin caché.
 		// return response()->json(['status'=>'ok', 'data'=>Fabricante::all()],200);
 

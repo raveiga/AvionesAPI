@@ -35,7 +35,7 @@ class FabricanteAvionController extends Controller {
 			return response()->json(['errors'=>array(['code'=>404,'message'=>'No se encuentra un fabricante con ese código.'])],404);
 		}
 
-		$listaAviones=Cache::remember('cacheaviones',1,function()
+		$listaAviones=Cache::remember('cacheaviones',1,function() use ($fabricante)
 		{
 			return $fabricante->aviones()->get();
 		});
